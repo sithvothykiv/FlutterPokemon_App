@@ -1,0 +1,34 @@
+import 'package:flutter_pokemon_app/core/extensions/string.dart';
+
+import 'package:flutter_pokemon_app/data/source/api/models/pokemon.dart';
+
+import 'package:flutter_pokemon_app/data/source/local/models/pokemon.dart';
+import 'package:flutter_pokemon_app/data/source/local/models/pokemon_gender.dart';
+import 'package:flutter_pokemon_app/data/source/local/models/pokemon_stats.dart';
+
+extension PokemonModelToLocalX on PokemonModel {
+  PokemonHiveModel toHiveModel() => PokemonHiveModel()
+    ..number = id.trim()
+    ..name = name.trim()
+    ..description = xDescription.trim()
+    ..types = types.toList(growable: false)
+    ..image = imageUrl.trim()
+    ..height = height.trim()
+    ..weight = weight.trim()
+    ..genera = category.trim()
+    ..eggGroups = eggGroups?.split(RegExp(r',\s*?')).map((e) => e.trim()).toList() ?? []
+    ..gender = (PokemonGenderHiveModel()
+      ..male = genderMalePercentage?.parseDouble() ?? 0
+      ..female = genderFemalePercentage?.parseDouble() ?? 0
+      ..genderless = genderless == 1)
+    ..stats = (PokemonStatsHiveModel()
+      ..hp = hp.toInt()
+      ..speed = speed.toInt()
+      ..attack = attack.toInt()
+      ..defense = defense.toInt()
+      ..specialAttack = specialAttack.toInt()
+      ..specialDefense = specialDefense.toInt())
+    ..baseExp = baseExp.parseDouble()
+    ..evolutions = evolutions
+    ..evolutionReason = reason ?? '';
+}
